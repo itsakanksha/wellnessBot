@@ -34,8 +34,19 @@ let user, dailyQuoteTime, hydrationDays, hydrationInterval, hydrationStartTime, 
 module.exports = async (event, context) => {
 
   console.log('successfully deploying from console pls ');
+
   // Prepare workflow object to store API responses
   let workflow = {};
+
+  // Retrieve and store user id from event object
+  workflow.user = await users.retrieve({
+    user: `${event.user_id}`
+  });
+
+  // Retrieve and store channel id from event object
+  workflow.channel = await conversations.info({
+    id: `${event.channel_id}`
+  });
 
   var command = `${event.command}`; // Slash command entered by the user
   var params = `${event.text}`; // Extra parameters added by user
@@ -44,7 +55,7 @@ module.exports = async (event, context) => {
   var countQueryResult = await query.count({
     table: `Wellness Subscribers`,
     where: {
-      'User ID': `${event.user_id}`
+      'User ID': `${workflow.user.id}`
     },
     limit: {
       'count': 0,
@@ -59,7 +70,7 @@ module.exports = async (event, context) => {
     var userRecord = await query.select({
       table: `Wellness Subscribers`,
       where: {
-        'User ID': `${event.user_id}`
+        'User ID': `${workflow.user.id}`
       }
     });
     user = { id: userRecord.rows[0].fields['User ID'],
@@ -105,9 +116,9 @@ module.exports = async (event, context) => {
            Explain to user what WellnessBot is and give usage tips */
         if (!userSubscribed) {
           await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: helper.helpText(`${event.user_id.real_name}`),
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: helper.helpText(`${workflow.user.id.real_name}`),
             attachments: [helper.usageTipsUnsubscribed]
           });
         }
@@ -115,9 +126,9 @@ module.exports = async (event, context) => {
            Show settings and give usage tips */
         else {
             await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: helper.settingsText(`${event.user_id.real_name}`),
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: helper.settingsText(`${workflow.user.id.real_name}`),
             attachments: [
               helper.dailyQuoteAttachment(user.dailyQuote, user.dailyQuoteDays, dailyQuoteTime),
               helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),
@@ -132,9 +143,9 @@ module.exports = async (event, context) => {
            Notify user that they can only change settings after they've subscribed' */
         if (!userSubscribed) {
           await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: `Hi, ` + `${event.user_id.real_name}` + `! Before you can personalize your WellnessBot settings, you need to subscribe to wellness reminders. To do so, simply type \`/wellness subscribe\`.`,
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: `Hi, ` + `${workflow.user.id.real_name}` + `! Before you can personalize your WellnessBot settings, you need to subscribe to wellness reminders. To do so, simply type \`/wellness subscribe\`.`,
             attachments: [helper.usageTipsUnsubscribed]
           });
         }
@@ -142,9 +153,9 @@ module.exports = async (event, context) => {
            Show settings and give usage tips */
         else {
           await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: helper.settingsText(`${event.user_id.real_name}`),
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: helper.settingsText(`${workflow.user.id.real_name}`),
             attachments: [
               helper.dailyQuoteAttachment(user.dailyQuote, user.dailyQuoteDays, dailyQuoteTime),
               helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),
@@ -159,9 +170,9 @@ module.exports = async (event, context) => {
       else if (params == 'help') {
         let attachments = (userSubscribed ? [helper.usageTipsSubscribed] : [helper.usageTipsUnsubscribed]);
         workflow.response = await messages.ephemeral.create({
-          channelId: `${event.channel_id}`,
-          userId: `${event.user_id}`,
-          text: helper.helpText(`${event.user_id.real_name}`),
+          channelId: `${workflow.channel.id}`,
+          userId: `${workflow.user.id}`,
+          text: helper.helpText(`${workflow.user.id.real_name}`),
           attachments: attachments
         });
       }
@@ -174,8 +185,8 @@ module.exports = async (event, context) => {
             table: `Wellness Subscribers`,
             fields: {
               'Timezone Offset': `${event.user_id.tz_offset}`,
-              'Name': `${event.user_id.real_name}`,
-              'User ID': `${event.user_id}`,
+              'Name': `${workflow.user.id.real_name}`,
+              'User ID': `${workflow.user.id}`,
               'Daily Quote Bool': 'off',
               'Hydration Bool': 'off',
               'Break Bool': 'off',
@@ -209,9 +220,9 @@ module.exports = async (event, context) => {
 
           // Send success message to the user
           workflow.response = await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: `Hi, ${event.user_id.real_name}! Thanks for letting me help you take care of your health throughout your workday :blush: \n You can personalize how often you want me to send you reminders by changing the default settings below! \n\n`,
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: `Hi, ${workflow.user.id.real_name}! Thanks for letting me help you take care of your health throughout your workday :blush: \n You can personalize how often you want me to send you reminders by changing the default settings below! \n\n`,
             attachments: [
                helper.dailyQuoteAttachment(workflow.insertQueryResult.fields['Daily Quote Bool'], workflow.insertQueryResult.fields['Daily Quote Days'], dailyQuoteTime),
                helper.hydrationAttachment(workflow.insertQueryResult.fields['Hydration Bool'], hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),
@@ -224,9 +235,9 @@ module.exports = async (event, context) => {
            Remind user that they're already subscribed */
         else {
          await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: `Hi, ${event.user_id.real_name}! You're already subscribed to receive wellness reminders. :blush: \n\n`,
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: `Hi, ${workflow.user.id.real_name}! You're already subscribed to receive wellness reminders. :blush: \n\n`,
             attachments: [ helper.usageTipsSubscribed ]
           });
         }
@@ -236,9 +247,9 @@ module.exports = async (event, context) => {
            Remind user that they're already unsubscribed */
         if (!userSubscribed) {
           await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
-            text: `Hi, ${event.user_id.real_name}! You're already unsubcribed from wellness reminders.\n\n`,
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
+            text: `Hi, ${workflow.user.id.real_name}! You're already unsubcribed from wellness reminders.\n\n`,
             attachments: [ helper.usageTipsUnsubscribed ]
           });
         }
@@ -253,7 +264,7 @@ module.exports = async (event, context) => {
 
           // Looking for this user's IM id
           for (let i = 0; i < listOfIMs.channels.length; i++) {
-            if (`${event.user_id}` == listOfIMs.channels[i].user) {
+            if (`${workflow.user.id}` == listOfIMs.channels[i].user) {
               user_im_id = listOfIMs.channels[i].id;
             }
           }
@@ -275,16 +286,16 @@ module.exports = async (event, context) => {
           let result = await query.delete({
             table: 'Wellness Subscribers',
             where: {
-              'User ID': `${event.user_id}`
+              'User ID': `${workflow.user.id}`
             }
           });
 
           // Send success message to the user
           if (result.rows.length != 0) {
             await messages.ephemeral.create({
-              channelId: `${event.channel_id}`,
-              userId: `${event.user_id}`,
-              text: `We're sad to see you go ${event.user_id.real_name} :cry: You've been unsubcribed from wellness reminders.\n\n`,
+              channelId: `${workflow.channel.id}`,
+              userId: `${workflow.user.id}`,
+              text: `We're sad to see you go ${workflow.user.id.real_name} :cry: You've been unsubcribed from wellness reminders.\n\n`,
               attachments: [ helper.usageTipsUnsubscribed ]
             });
           }
@@ -294,8 +305,8 @@ module.exports = async (event, context) => {
          Send a random quote */
       else if (params == 'quote') {
         await messages.ephemeral.create({
-          channelId: `${event.channel_id}`,
-          userId: `${event.user_id}`,
+          channelId: `${workflow.channel.id}`,
+          userId: `${workflow.user.id}`,
           text: ':dizzy: ' + helper.randomQuoteGenerator(),
           attachments: null
         });
@@ -305,8 +316,8 @@ module.exports = async (event, context) => {
       else {
         let attachments = (userSubscribed ? [helper.usageTipsSubscribed] : [helper.usageTipsUnsubscribed]);
           await messages.ephemeral.create({
-            channelId: `${event.channel_id}`,
-            userId: `${event.user_id}`,
+            channelId: `${workflow.channel.id}`,
+            userId: `${workflow.user.id}`,
             text: helper.randomInvalidCommandMessageGenerator(),
             attachments: attachments
           });
@@ -316,8 +327,8 @@ module.exports = async (event, context) => {
   catch (err) {
     //Failure message in case something went wrong
     await messages.ephemeral.create({
-      channelId: `${event.channel_id}`,
-      userId: `${event.user_id}`,
+      channelId: `${workflow.channel.id}`,
+      userId: `${workflow.user.id}`,
       text: `Uh oh, something went wrong. Please try again in a few minutes.`
     });
   }
