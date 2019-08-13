@@ -34,6 +34,7 @@ let user, dailyQuoteTime, hydrationDays, hydrationInterval, hydrationStartTime, 
 */
 module.exports = async (event, context) => {
 
+  console.log('successfully deploying from console');
   // Prepare workflow object to store API responses
   let workflow = {};
 
