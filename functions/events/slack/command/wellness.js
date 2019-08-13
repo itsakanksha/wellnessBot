@@ -42,11 +42,13 @@ module.exports = async (event, context) => {
   workflow.user = await users.retrieve({
     user: `${event.user_id}`
   });
+  console.log(workflow.user);
 
   // Retrieve and store channel id from event object
   workflow.channel = await conversations.info({
     id: `${event.channel_id}`
   });
+  console.log(workflow.channel);
 
   var command = `${event.command}`; // Slash command entered by the user
   var params = `${event.text}`; // Extra parameters added by user
