@@ -1,5 +1,6 @@
 /**
  * wellness.js is the handler for all slash commands
+ *
  * @author Akanksha Kevalramani
  */
 
@@ -27,18 +28,18 @@ let user, dailyQuoteTime, hydrationDays, hydrationInterval, hydrationStartTime, 
 * /wellness help
 * /wellness quote
 * and it also handles invalid commands
-* 
+*
 * @param {object} event Slack command event body (raw)
 * @returns {object} workflow The result of your workflow steps
 */
 module.exports = async (event, context) => {
-  
+
   // Prepare workflow object to store API responses
   let workflow = {};
 
-  var command = `${event.command}`; // Slash command entered by the user  
+  var command = `${event.command}`; // Slash command entered by the user
   var params = `${event.text}`; // Extra parameters added by user
-        
+
   // Check if user exists in database
   var countQueryResult = await query.count({
     table: `Wellness Subscribers`,
@@ -51,7 +52,7 @@ module.exports = async (event, context) => {
     }
   });
   let userSubscribed = ((countQueryResult).count != 0);
-  
+
   // If user is subcribed, fetch their data
   if (userSubscribed) {
     // Retrieve user record from database
@@ -61,45 +62,45 @@ module.exports = async (event, context) => {
         'User ID': `${event.user_id}`
       }
     });
-    user = { id: userRecord.rows[0].fields['User ID'], 
-               name: userRecord.rows[0].fields['Name'], 
-               tz: userRecord.rows[0].fields['Timezone Offset'], 
+    user = { id: userRecord.rows[0].fields['User ID'],
+               name: userRecord.rows[0].fields['Name'],
+               tz: userRecord.rows[0].fields['Timezone Offset'],
                dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
-               hydration: userRecord.rows[0].fields['Hydration Bool'], 
-               break: userRecord.rows[0].fields['Break Bool'], 
-               hydrationTimes: userRecord.rows[0].fields['Hydration Times'], 
-               breakTimes: userRecord.rows[0].fields['Break Times'], 
-               dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'], 
-               hydrationTimes: userRecord.rows[0].fields['Hydration Times'], 
-               breakDays: userRecord.rows[0].fields['Break Days'], 
-               dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'], 
+               hydration: userRecord.rows[0].fields['Hydration Bool'],
+               break: userRecord.rows[0].fields['Break Bool'],
+               hydrationTimes: userRecord.rows[0].fields['Hydration Times'],
+               breakTimes: userRecord.rows[0].fields['Break Times'],
+               dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
+               hydrationTimes: userRecord.rows[0].fields['Hydration Times'],
+               breakDays: userRecord.rows[0].fields['Break Days'],
+               dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
                hydrationDays: userRecord.rows[0].fields['Hydration Days'],
-               hydrationEnd: userRecord.rows[0].fields['Hydration End'], 
+               hydrationEnd: userRecord.rows[0].fields['Hydration End'],
                breakEnd: userRecord.rows[0].fields['Break End'],
-               hydrationInterval: userRecord.rows[0].fields['Hydration Interval'], 
+               hydrationInterval: userRecord.rows[0].fields['Hydration Interval'],
                breakInterval: userRecord.rows[0].fields['Break Interval']
              };
-          
+
       // Converting Daily Quote database values to meaningful strings
       dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
-        
+
       // Converting Hydration database values to meaningful strings
       hydrationDays = helper.dayRanges[user.hydrationDays],
       hydrationStartTime = helper.convertMinutesToString(parseInt(user.hydrationTimes.split(",")[0])),
       hydrationInterval = helper.convertIntervalToString(user.hydrationInterval),
       hydrationEndTime = helper.convertMinutesToString(user.hydrationEnd);
-    
+
       // Converting Break database values to meaningful strings
       breakDays = helper.dayRanges[user.breakDays],
       breakStartTime = helper.convertMinutesToString(parseInt(user.breakTimes.split(",")[0])),
       breakInterval = helper.convertIntervalToString(user.breakInterval),
-      breakEndTime = helper.convertMinutesToString(user.breakEnd);     
+      breakEndTime = helper.convertMinutesToString(user.breakEnd);
   }
-  
+
   // Parsing and responding to commands
   try {
     if (command == '/wellness') {
-      if (!params) { 
+      if (!params) {
         /* User is not subscribed and typed "/wellness"
            Explain to user what WellnessBot is and give usage tips */
         if (!userSubscribed) {
@@ -108,7 +109,7 @@ module.exports = async (event, context) => {
             userId: `${event.user_id}`,
             text: helper.helpText(`${event.user_id.real_name}`),
             attachments: [helper.usageTipsUnsubscribed]
-          });    
+          });
         }
         /* User is subscribed and typed "/wellness"
            Show settings and give usage tips */
@@ -123,7 +124,7 @@ module.exports = async (event, context) => {
               helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
           	  helper.usageTipsSubscribed
             ]
-          });    
+          });
         }
       }
       else if (params == 'settings') {
@@ -135,7 +136,7 @@ module.exports = async (event, context) => {
             userId: `${event.user_id}`,
             text: `Hi, ` + `${event.user_id.real_name}` + `! Before you can personalize your WellnessBot settings, you need to subscribe to wellness reminders. To do so, simply type \`/wellness subscribe\`.`,
             attachments: [helper.usageTipsUnsubscribed]
-          });   
+          });
         }
         /* User is subscribed and typed "/wellness settings"
            Show settings and give usage tips */
@@ -150,19 +151,19 @@ module.exports = async (event, context) => {
               helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
           	  helper.usageTipsSubscribed
             ]
-          });    
+          });
         }
       }
       /* User typed "/wellness help"
          Explain to user what WellnessBot is and give usage tips */
       else if (params == 'help') {
-        let attachments = (userSubscribed ? [helper.usageTipsSubscribed] : [helper.usageTipsUnsubscribed]);     
+        let attachments = (userSubscribed ? [helper.usageTipsSubscribed] : [helper.usageTipsUnsubscribed]);
         workflow.response = await messages.ephemeral.create({
           channelId: `${event.channel_id}`,
           userId: `${event.user_id}`,
           text: helper.helpText(`${event.user_id.real_name}`),
           attachments: attachments
-        }); 
+        });
       }
       else if (params == 'subscribe') {
         /* User is unsubscribed and typed "/wellness subscribe"
@@ -186,26 +187,26 @@ module.exports = async (event, context) => {
               'Hydration Days': 1,
               'Hydration End': 1020,
               'Break End': 1020,
-              'Hydration Interval': 60, 
+              'Hydration Interval': 60,
               'Break Interval': 60
             }
           });
-          
+
           // Converting Daily Quote database values to meaningful strings
           dailyQuoteTime = helper.convertMinutesToString(workflow.insertQueryResult.fields['Daily Quote Time']);
-            
+
           // Converting Hydration database values to meaningful strings
           hydrationDays = helper.dayRanges[workflow.insertQueryResult.fields['Hydration Days']],
           hydrationInterval = helper.convertIntervalToString(parseInt(workflow.insertQueryResult.fields['Hydration Interval'])),
           hydrationStartTime = helper.convertMinutesToString(parseInt(workflow.insertQueryResult.fields['Hydration Times'].split(",")[0])),
           hydrationEndTime = helper.convertMinutesToString(workflow.insertQueryResult.fields['Hydration End']);
-            
+
           // Converting Break database values to meaningful strings
           breakDays = helper.dayRanges[workflow.insertQueryResult.fields['Break Days']],
           breakInterval = helper.convertIntervalToString(parseInt(workflow.insertQueryResult.fields['Break Interval'])),
           breakStartTime = helper.convertMinutesToString(parseInt(workflow.insertQueryResult.fields['Break Times'].split(",")[0])),
           breakEndTime = helper.convertMinutesToString(workflow.insertQueryResult.fields['Break End']);
-         
+
           // Send success message to the user
           workflow.response = await messages.ephemeral.create({
             channelId: `${event.channel_id}`,
@@ -217,7 +218,7 @@ module.exports = async (event, context) => {
                helper.breakAttachment(workflow.insertQueryResult.fields['Break Bool'], breakDays, breakInterval, breakStartTime, breakEndTime),
             	 helper.usageTipsSubscribed
             ]
-          });  
+          });
         }
         /* User is subscribed and typed "/wellness subscribe"
            Remind user that they're already subscribed */
@@ -227,7 +228,7 @@ module.exports = async (event, context) => {
             userId: `${event.user_id}`,
             text: `Hi, ${event.user_id.real_name}! You're already subscribed to receive wellness reminders. :blush: \n\n`,
             attachments: [ helper.usageTipsSubscribed ]
-          });    
+          });
         }
       }
       else if (params == 'unsubscribe') {
@@ -239,7 +240,7 @@ module.exports = async (event, context) => {
             userId: `${event.user_id}`,
             text: `Hi, ${event.user_id.real_name}! You're already unsubcribed from wellness reminders.\n\n`,
             attachments: [ helper.usageTipsUnsubscribed ]
-          });    
+          });
         }
         /* User is subscribed and typed "/wellness unsubscribe"
            Delete existing scheduled messages, remove user from database, and give confirmation message that they've unsubscribed */
@@ -249,27 +250,27 @@ module.exports = async (event, context) => {
             types: "im"
           });
           let user_im_id;
-          
+
           // Looking for this user's IM id
           for (let i = 0; i < listOfIMs.channels.length; i++) {
             if (`${event.user_id}` == listOfIMs.channels[i].user) {
-              user_im_id = listOfIMs.channels[i].id; 
-            }  
+              user_im_id = listOfIMs.channels[i].id;
+            }
           }
-          
+
           // Retrieving all scheduled messages for this user
           let userScheduledMessages = await scheduledMessages.list({
             channel: user_im_id // (required)
           });
-        
+
           // Deleting this user's scheduled messages
           await async.mapLimit(userScheduledMessages.scheduled_messages, 10, async (message) => {
             let result = await scheduledMessages.destroy({
               channel: user_im_id, // (required)
               scheduled_message_id: message.id // (required)
-            });            
+            });
           });
-          
+
           // Deleting this user from database
           let result = await query.delete({
             table: 'Wellness Subscribers',
@@ -277,7 +278,7 @@ module.exports = async (event, context) => {
               'User ID': `${event.user_id}`
             }
           });
-          
+
           // Send success message to the user
           if (result.rows.length != 0) {
             await messages.ephemeral.create({
@@ -285,7 +286,7 @@ module.exports = async (event, context) => {
               userId: `${event.user_id}`,
               text: `We're sad to see you go ${event.user_id.real_name} :cry: You've been unsubcribed from wellness reminders.\n\n`,
               attachments: [ helper.usageTipsUnsubscribed ]
-            });               
+            });
           }
         }
       }
@@ -301,26 +302,26 @@ module.exports = async (event, context) => {
       }
       /* User typed "/wellness <something>"
          Send an invalid command error message */
-      else { 
-        let attachments = (userSubscribed ? [helper.usageTipsSubscribed] : [helper.usageTipsUnsubscribed]);     
+      else {
+        let attachments = (userSubscribed ? [helper.usageTipsSubscribed] : [helper.usageTipsUnsubscribed]);
           await messages.ephemeral.create({
             channelId: `${event.channel_id}`,
             userId: `${event.user_id}`,
             text: helper.randomInvalidCommandMessageGenerator(),
             attachments: attachments
-          }); 
+          });
       }
     }
   }
-  catch (err) {    
+  catch (err) {
     //Failure message in case something went wrong
     await messages.ephemeral.create({
       channelId: `${event.channel_id}`,
       userId: `${event.user_id}`,
       text: `Uh oh, something went wrong. Please try again in a few minutes.`
-    }); 
+    });
   }
 
   return workflow;
-  
+
 };
