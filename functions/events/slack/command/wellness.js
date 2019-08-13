@@ -1,6 +1,5 @@
 /**
  * wellness.js is the handler for all slash commands
- *
  * @author Akanksha Kevalramani
  */
 
@@ -34,7 +33,7 @@ let user, dailyQuoteTime, hydrationDays, hydrationInterval, hydrationStartTime, 
 */
 module.exports = async (event, context) => {
 
-  console.log('successfully deploying from console');
+  console.log('successfully deploying from console pls ');
   // Prepare workflow object to store API responses
   let workflow = {};
 
