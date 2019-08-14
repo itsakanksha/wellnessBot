@@ -106,7 +106,7 @@ module.exports = async (event, context) => {
      });
   }
 
-  let user = {
+  user = {
                dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
                dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
                dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
