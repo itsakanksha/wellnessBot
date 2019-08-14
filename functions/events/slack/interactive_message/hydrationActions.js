@@ -31,16 +31,6 @@ module.exports = async (event, context) => {
   // Prepare workflow object to store API responses
   let workflow = {};
 
-  // Retrieve and store user id from event object
-  workflow.user = await users.retrieve({
-    user: `${event.user.id}`
-  });
-
-  // Retrieve and store channel id from event object
-  workflow.channel = await conversations.info({
-    id: `${event.channel.id}`
-  });
-
   // Retrieve and store the action that was taken
   let actionTaken = `${event.actions[0]["name"]}`,
       actionValue = `${event.actions[0]["value"]}`;
@@ -105,6 +95,11 @@ module.exports = async (event, context) => {
        trigger_id: `${event.trigger_id}`
      });
   }
+
+  // Retrieve and store user id from event object
+  workflow.user = await users.retrieve({
+    user: `${event.user.id}`
+  });
 
   user = {
            dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],

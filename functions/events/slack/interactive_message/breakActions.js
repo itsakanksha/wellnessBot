@@ -31,16 +31,6 @@ module.exports = async (event, context) => {
   // Prepare workflow object to store API responses
   let workflow = {};
 
-  // Retrieve and store user id from event object
-  workflow.user = await users.retrieve({
-    user: `${event.user.id}`
-  });
-
-  // Retrieve and store channel id from event object
-  workflow.channel = await conversations.info({
-    id: `${event.channel.id}`
-  });
-
   // Retrieve and store the action that was taken
   let actionTaken = `${event.actions[0]["name"]}`,
       actionValue = `${event.actions[0]["value"]}`;
@@ -54,7 +44,6 @@ module.exports = async (event, context) => {
   });
 
   // Retrieving partial user information because I'm trying to open the dialog as soon as possible - event trigger_id expires in 3 seconds
-
   let user = {
                break: userRecord.rows[0].fields['Break Bool'],
                breakTimes: userRecord.rows[0].fields['Break Times'],
@@ -106,16 +95,21 @@ module.exports = async (event, context) => {
     });
   }
 
-  let user = {
-               dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
-               dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
-               dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
-               hydration: userRecord.rows[0].fields['Hydration Bool'],
-               hydrationTimes: userRecord.rows[0].fields['Hydration Times'],
-               hydrationDays: userRecord.rows[0].fields['Hydration Days'],
-               hydrationEnd: userRecord.rows[0].fields['Hydration End'],
-               hydrationInterval: userRecord.rows[0].fields['Hydration Interval']
-             };
+  // Retrieve and store user id from event object
+  workflow.user = await users.retrieve({
+    user: `${event.user.id}`
+  });
+
+  user = {
+           dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
+           dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
+           dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
+           hydration: userRecord.rows[0].fields['Hydration Bool'],
+           hydrationTimes: userRecord.rows[0].fields['Hydration Times'],
+           hydrationDays: userRecord.rows[0].fields['Hydration Days'],
+           hydrationEnd: userRecord.rows[0].fields['Hydration End'],
+           hydrationInterval: userRecord.rows[0].fields['Hydration Interval']
+         };
 
   // Converting Daily Quote database values to meaningful strings
   dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
@@ -162,15 +156,14 @@ module.exports = async (event, context) => {
            helper.breakAttachment(actionValue, breakDays, breakInterval, breakStartTime, breakEndTime), // the attachment that is changing
         	 helper.usageTipsSubscribed
         ]
-        })
-      });
+      })
+    });
 
-      // Rescheduling the messages
-      let scheduleUserMessages = await lib[`${context.service.identifier}.scheduleUserMessages`]({
-        userID: `${event.user.id}`
-      });
-    }
-
+    // Rescheduling the messages
+    let scheduleUserMessages = await lib[`${context.service.identifier}.scheduleUserMessages`]({
+      userID: `${event.user.id}`
+    });
+  }
 
   return workflow;
 };
