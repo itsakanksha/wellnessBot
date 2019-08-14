@@ -83,7 +83,7 @@ module.exports.settingsText = "WellnessBot Settings\n\n";
 
 module.exports.usageTipsUnsubscribed =  { text: `*Usage Tips*\n\n:bell: \`/wellness subscribe\`: Subscribe to receive wellness reminders\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote for a little pick me up!\n:crystal_ball: \`/wellness help\`: Learn about all that you can do with WellnessBot`};
 
-module.exports.usageTipsSubscribed =  { text: `*Usage Tips*\n\n:gear: \`/wellness settings\`: Personalize your WellnessBot settings\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote\n:no_bell: \`/wellness unsubscribe\`: Unsubscribe to stop receiving wellness reminders\n:crystal_ball:\ `/wellness help\`: Learn about all that you can do with WellnessBot`};
+module.exports.usageTipsSubscribed =  { text: `*Usage Tips*\n\n:gear: \`/wellness settings\`: Personalize your WellnessBot settings\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote\n:no_bell: \`/wellness unsubscribe\`: Unsubscribe to stop receiving wellness reminders\n:crystal_ball: \`/wellness help\`: Learn about all that you can do with WellnessBot`};
 
 module.exports.inputError = { color: '#D33222', text: "Uh oh, we found an error in your submission and your changes didn't go through. Make sure your interval is not greater than the start and end time otherwise you won't receive any reminders."};
 
