@@ -101,16 +101,14 @@ module.exports = async (event, context) => {
     user: `${event.user.id}`
   });
 
-  user = {
-           dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
-           dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
-           dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
-           break: userRecord.rows[0].fields['Break Bool'],
-           breakTimes: userRecord.rows[0].fields['Break Times'],
-           breakDays: userRecord.rows[0].fields['Break Days'],
-           breakEnd: userRecord.rows[0].fields['Break End'],
-           breakInterval: userRecord.rows[0].fields['Break Interval']
-         };
+  user[dailyQuote] = userRecord.rows[0].fields['Daily Quote Bool'];
+  user[dailyQuoteTime] = userRecord.rows[0].fields['Daily Quote Time'];
+  user[dailyQuoteDays] = userRecord.rows[0].fields['Daily Quote Days'];
+  user[break] = userRecord.rows[0].fields['Break Bool'];
+  user[breakTimes] = userRecord.rows[0].fields['Break Times'];
+  user[breakDays] = userRecord.rows[0].fields['Break Days'];
+  user[breakEnd] = userRecord.rows[0].fields['Break End'];
+  user[breakInterval] = userRecord.rows[0].fields['Break Interval'];
 
   // Converting Daily Quote database values to meaningful strings
   dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
