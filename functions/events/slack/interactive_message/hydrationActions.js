@@ -53,7 +53,7 @@ module.exports = async (event, context) => {
     }
   });
 
-  //Trying to open the dialog as soon as possible because trigger_id expires in 3 seconds
+  // Retrieving partial user information because I'm trying to open the dialog as soon as possible - event trigger_id expires in 3 seconds
 
   let user = {
                hydration: userRecord.rows[0].fields['Hydration Bool'],
@@ -107,15 +107,15 @@ module.exports = async (event, context) => {
   }
 
   user = {
-               dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
-               dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
-               dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
-               break: userRecord.rows[0].fields['Break Bool'],
-               breakTimes: userRecord.rows[0].fields['Break Times'],
-               breakDays: userRecord.rows[0].fields['Break Days'],
-               breakEnd: userRecord.rows[0].fields['Break End'],
-               breakInterval: userRecord.rows[0].fields['Break Interval']
-             };
+           dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
+           dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
+           dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
+           break: userRecord.rows[0].fields['Break Bool'],
+           breakTimes: userRecord.rows[0].fields['Break Times'],
+           breakDays: userRecord.rows[0].fields['Break Days'],
+           breakEnd: userRecord.rows[0].fields['Break End'],
+           breakInterval: userRecord.rows[0].fields['Break Interval']
+         };
 
   // Converting Daily Quote database values to meaningful strings
   dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
