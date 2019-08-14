@@ -76,28 +76,28 @@ module.exports = async (event, context) => {
               "label": "What days should I send you the reminders on?",
               "type": "select",
               "name": "hydrationDays",
-              "value": helper.dayRanges[user.hydrationDays],
+              "value": user.hydrationDays,
               "options": helper.dayRangesAttachment
             },
             {
               "label": "What time should we send you the first reminder?",
               "type": "select",
               "name": "hydrationStartTime",
-              "value": helper.convertMinutesToString(parseInt(user.hydrationTimes.split(",")[0])),
+              "value": user.hydrationTimes.split(",")[0],
               "options": helper.timeRangesAttachment
             },
             {
               "label": "What time should we send you the last reminder?",
               "type": "select",
               "name": "hydrationEndTime",
-              "value": helper.convertMinutesToString(user.hydrationEnd),
+              "value": user.hydrationEnd,
               "options": helper.timeRangesAttachment
             },
             {
               "label": "How often would you like to be reminded?",
               "type": "select",
               "name": "hydrationInterval",
-              "value": helper.convertIntervalToString(user.hydrationInterval),
+              "value": user.hydrationInterval,
               "options": helper.timeIntervalsAttachment
             }
          ]
