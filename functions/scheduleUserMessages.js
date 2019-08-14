@@ -74,6 +74,7 @@ function calculateEpoch(userTime, offsetHours, offsetMinutes) {
 */
 module.exports = async (userID) => {
 
+  console.log('starting to reschedule messages');
   // Prepare workflow object to store API responses
   let workflow = {};
 
@@ -211,6 +212,7 @@ module.exports = async (userID) => {
 
   console.log('SCHEDULED MESSAGES AFTER RESCHEDULING: ' + userScheduledMessages2.scheduled_messages.length + '\n\n');
   //console.log(userScheduledMessages2);
+  console.log('message rescheduling complete');
 
   return workflow;
 };
