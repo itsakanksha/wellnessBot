@@ -158,7 +158,8 @@ module.exports = async (event, context) => {
       	helper.usageTipsSubscribed
       ]
       })
-    });
+    console.log('whats going on fam');
+    console.log(response.data);
 
     // Rescheduling the messages
     let scheduleUserMessages = await lib[`${context.service.identifier}.scheduleUserMessages`]({
