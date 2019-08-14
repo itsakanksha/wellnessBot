@@ -157,7 +157,8 @@ module.exports = async (event, context) => {
         helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
       	helper.usageTipsSubscribed
       ]
-      })
+    });
+  });
     console.log('whats going on fam');
     console.log(response.data);
 
