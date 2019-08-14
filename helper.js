@@ -3,87 +3,14 @@
  * @author Akanksha Kevalramani
  */
 
+/** Local Variable Declarations **/
+
 let onColor = '#F3B84C',
     defaultColor = '#E2E2E2';
-let changeScheduleButtonAttachment = {type: 'button', text: 'Change Schedule', value: 'change', name: 'schedule'};
-        
-module.exports.settingsText = "WellnessBot Settings\n\n";  
-module.exports.usageTipsUnsubscribed =  { text: `*Usage Tips*\n\n:bell: \`/wellness subscribe\`: Subscribe to receive wellness reminders\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote for a little pick me up!\n:crystal_ball:\`/wellness help\`: Learn about all that you can do with WellnessBot`};
-module.exports.usageTipsSubscribed =  { text: `*Usage Tips*\n\n:gear: \`/wellness settings\`: Personalize your WellnessBot settings\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote\n:no_bell: \`/wellness unsubscribe\`: Unsubscribe to stop receiving wellness reminders\n:crystal_ball:\`/wellness help\`: Learn about all that you can do with WellnessBot`};
-module.exports.inputError = { color: '#D33222', text: "Uh oh, we found an error in your submission and your changes didn't go through. Make sure your interval is not greater than the start and end time otherwise you won't receive any reminders."}
-let dayRanges = {0: 'Every day', 1: 'Monday through Friday', 2: 'Sunday through Thursday', 3: 'Monday through Saturday'};
-module.exports.dayRanges = dayRanges;
-module.exports.timeRangesAttachment = [
-    { "label": "7:00 AM", "value": "420" },
-    { "label": "7:30 AM", "value": "450" },
-    { "label": "8:00 AM", "value": "480" },
-    { "label": "8:30 AM", "value": "510" },
-    { "label": "9:00 AM", "value": "540" },
-    { "label": "9:30 AM", "value": "570" },
-    { "label": "10:00 AM", "value": "600" },
-    { "label": "10:30 AM", "value": "630" },
-    { "label": "11:00 AM", "value": "660" },
-    { "label": "11:30 AM", "value": "690" },
-    { "label": "12:00 PM", "value": "720" },
-    { "label": "12:30 PM", "value": "750" },
-    { "label": "1:00 PM", "value": "780" },
-    { "label": "1:30 PM", "value": "810" },
-    { "label": "2:00 PM", "value": "840" },
-    { "label": "2:30 PM", "value": "870" },
-    { "label": "3:00 PM", "value": "900" },
-    { "label": "3:30 PM", "value": "930" },
-    { "label": "4:00 PM", "value": "960" },
-    { "label": "4:30 PM", "value": "990" },
-    { "label": "5:00 PM", "value": "1020" },
-    { "label": "5:30 PM", "value": "1050" },
-    { "label": "6:00 PM", "value": "1080" },
-    { "label": "6:30 PM", "value": "1110" },
-    { "label": "7:00 PM", "value": "1140" },
-    { "label": "7:30 PM", "value": "1170" },
-    { "label": "8:00 PM", "value": "1200" },
-    { "label": "8:30 PM", "value": "1230" },
-    { "label": "9:00 PM", "value": "1260" },
-    { "label": "9:30 PM", "value": "1290" },
-    { "label": "10:00 PM", "value": "1320" },
-    { "label": "10:30 PM", "value": "1350" },
-    { "label": "11:00 PM", "value": "1380" },
-    { "label": "11:30 PM", "value": "1410" },
-    { "label": "12:00 AM", "value": "1440" },
-    { "label": "12:30 AM", "value": "1470" },
-    { "label": "1:00 AM", "value": "60" },
-    { "label": "1:30 AM", "value": "90" },
-    { "label": "2:00 AM", "value": "120" },
-    { "label": "2:30 AM", "value": "150" },
-    { "label": "3:00 AM", "value": "180" },
-    { "label": "3:30 AM", "value": "210" },
-    { "label": "4:00 AM", "value": "240" },
-    { "label": "4:30 AM", "value": "270" },
-    { "label": "5:00 AM", "value": "300" },
-    { "label": "5:30 AM", "value": "330" },
-    { "label": "6:00 AM", "value": "360" },
-    { "label": "6:30 AM", "value": "390" }
-];
-module.exports.dayRangesAttachment = [
-    { "label": "Every day", "value": "0" },
-    { "label": "Monday through Friday", "value": "1" },
-    { "label": "Sunday through Thursday", "value": "2" },
-    { "label": "Monday through Saturday", "value": "3" }
-];
 
-module.exports.timeIntervalsAttachment = [
-    { "label": "15 minutes", "value": "15" },
-    { "label": "30 minutes", "value": "30" },
-    { "label": "45 minutes", "value": "45" },
-    { "label": "1 hour", "value": "60" },
-    { "label": "1 hour 15 minutes", "value": "75" },
-    { "label": "1 hour 30 minutes", "value": "90" },
-    { "label": "1 hour 45 minutes", "value": "105" },
-    { "label": "2 hours", "value": "120" },
-    { "label": "2 hours 15 minutes", "value": "135" },
-    { "label": "2 hours 30 minutes", "value": "150" },
-    { "label": "2 hours 45 minutes", "value": "165" },
-    { "label": "3 hours", "value": "165" }
-];
+let changeScheduleButtonAttachment = {type: 'button', text: 'Change Schedule', value: 'change', name: 'schedule'};
+
+let dayRanges = {0: 'Every day', 1: 'Monday through Friday', 2: 'Sunday through Thursday', 3: 'Monday through Saturday'};
 
 let quotes = [
   "You can't control everything. Sometimes you just need to relax and have faith that things will work out. Let go a little and just let life happen. -Kody Kiplinger",
@@ -147,10 +74,233 @@ let quotes = [
 let invalidCommandMessage = [
   "Sorry, I do not understand that command. :cry: Here's a list of commands I understand: \n",
   "Uh oh, that command did not work. :see_no_evil: Try the following commands instead: \n"
-]
-    
+];
+
+
+/** Export Variable Declarations **/
+
+module.exports.settingsText = "WellnessBot Settings\n\n";
+
+module.exports.usageTipsUnsubscribed =  { text: `*Usage Tips*\n\n:bell: \`/wellness subscribe\`: Subscribe to receive wellness reminders\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote for a little pick me up!\n:crystal_ball:\`/wellness help\`: Learn about all that you can do with WellnessBot`};
+
+module.exports.usageTipsSubscribed =  { text: `*Usage Tips*\n\n:gear: \`/wellness settings\`: Personalize your WellnessBot settings\n:sparkles: \`/wellness quote\`: Receive a random inspiring quote\n:no_bell: \`/wellness unsubscribe\`: Unsubscribe to stop receiving wellness reminders\n:crystal_ball:\`/wellness help\`: Learn about all that you can do with WellnessBot`};
+
+module.exports.inputError = { color: '#D33222', text: "Uh oh, we found an error in your submission and your changes didn't go through. Make sure your interval is not greater than the start and end time otherwise you won't receive any reminders."};
+
+module.exports.dayRanges = dayRanges;
+
+module.exports.timeRangesAttachment = [
+    { "label": "7:00 AM", "value": "420" },
+    { "label": "7:30 AM", "value": "450" },
+    { "label": "8:00 AM", "value": "480" },
+    { "label": "8:30 AM", "value": "510" },
+    { "label": "9:00 AM", "value": "540" },
+    { "label": "9:30 AM", "value": "570" },
+    { "label": "10:00 AM", "value": "600" },
+    { "label": "10:30 AM", "value": "630" },
+    { "label": "11:00 AM", "value": "660" },
+    { "label": "11:30 AM", "value": "690" },
+    { "label": "12:00 PM", "value": "720" },
+    { "label": "12:30 PM", "value": "750" },
+    { "label": "1:00 PM", "value": "780" },
+    { "label": "1:30 PM", "value": "810" },
+    { "label": "2:00 PM", "value": "840" },
+    { "label": "2:30 PM", "value": "870" },
+    { "label": "3:00 PM", "value": "900" },
+    { "label": "3:30 PM", "value": "930" },
+    { "label": "4:00 PM", "value": "960" },
+    { "label": "4:30 PM", "value": "990" },
+    { "label": "5:00 PM", "value": "1020" },
+    { "label": "5:30 PM", "value": "1050" },
+    { "label": "6:00 PM", "value": "1080" },
+    { "label": "6:30 PM", "value": "1110" },
+    { "label": "7:00 PM", "value": "1140" },
+    { "label": "7:30 PM", "value": "1170" },
+    { "label": "8:00 PM", "value": "1200" },
+    { "label": "8:30 PM", "value": "1230" },
+    { "label": "9:00 PM", "value": "1260" },
+    { "label": "9:30 PM", "value": "1290" },
+    { "label": "10:00 PM", "value": "1320" },
+    { "label": "10:30 PM", "value": "1350" },
+    { "label": "11:00 PM", "value": "1380" },
+    { "label": "11:30 PM", "value": "1410" },
+    { "label": "12:00 AM", "value": "1440" },
+    { "label": "12:30 AM", "value": "1470" },
+    { "label": "1:00 AM", "value": "60" },
+    { "label": "1:30 AM", "value": "90" },
+    { "label": "2:00 AM", "value": "120" },
+    { "label": "2:30 AM", "value": "150" },
+    { "label": "3:00 AM", "value": "180" },
+    { "label": "3:30 AM", "value": "210" },
+    { "label": "4:00 AM", "value": "240" },
+    { "label": "4:30 AM", "value": "270" },
+    { "label": "5:00 AM", "value": "300" },
+    { "label": "5:30 AM", "value": "330" },
+    { "label": "6:00 AM", "value": "360" },
+    { "label": "6:30 AM", "value": "390" }
+];
+
+module.exports.dayRangesAttachment = [
+    { "label": "Every day", "value": "0" },
+    { "label": "Monday through Friday", "value": "1" },
+    { "label": "Sunday through Thursday", "value": "2" },
+    { "label": "Monday through Saturday", "value": "3" }
+];
+
+module.exports.timeIntervalsAttachment = [
+    { "label": "15 minutes", "value": "15" },
+    { "label": "30 minutes", "value": "30" },
+    { "label": "45 minutes", "value": "45" },
+    { "label": "1 hour", "value": "60" },
+    { "label": "1 hour 15 minutes", "value": "75" },
+    { "label": "1 hour 30 minutes", "value": "90" },
+    { "label": "1 hour 45 minutes", "value": "105" },
+    { "label": "2 hours", "value": "120" },
+    { "label": "2 hours 15 minutes", "value": "135" },
+    { "label": "2 hours 30 minutes", "value": "150" },
+    { "label": "2 hours 45 minutes", "value": "165" },
+    { "label": "3 hours", "value": "165" }
+];
+
+/** All Helper Functions **/
+
+/**
+ * Returns the standard text to show for user settings messages
+ * @param {string} name name of the user, to personalize the message
+ * @returns {string}
+ */
+module.exports.settingsText = function(name) {
+  return 'Hi, ' + name + '! You can modify your wellness reminder settings below.';
+}
+
+/**
+ * Returns the text to show when user needs help
+ * @param {string} name name of the user, to personalize the message
+ * @returns {string}
+ */
+module.exports.helpText = function(name) {
+  return 'Hi, ' + name + '! I\'m Wellness Bot. I\'m here to help you take care of your health throughout the workday :blush: \n\n There\'s three ways I can help you if you subscribe: \n:dizzy: I can send you inspiring quotes every day at whatever time you choose.\n:droplet: I can send you reminders to drink water at regular intervals.\n:woman-walking: I can also send you reminders to take a break as as often as you\'d like!';
+}
+
+/**
+ * Returns a random invalid command message. This is used instead of a single standard message to add less predictably
+ * and more human-like feel to the bot.
+ * @returns {string}
+ */
+module.exports.randomInvalidCommandMessageGenerator = function() {
+    return invalidCommandMessage[Math.floor(Math.random() * invalidCommandMessage.length)];
+}
+
+/**
+ * Returns a random quote from a list of quotes.
+ * @returns {string}
+ */
+module.exports.randomQuoteGenerator = function() {
+    return quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+/**
+ * Returns a color for the message attachment based on whether the feature is turned on or off.
+ * @returns {string}
+ */
+function attachmentColor(toggle) {
+  if (toggle == 'on')
+    return onColor;
+  else
+    return defaultColor;
+}
+
+/**
+ * Returns the text to show for Daily Quote Settings
+ * @param {string} toggle         this value tells whether or not the user has opted for daily quotes
+ * @param {string} dailyQuoteDays the day range during which the quote should be sent
+ * @param {string} dailyQuoteTime the time (in minutes) at which quote should be sent
+ * @returns {string}
+ */
+function dailyQuoteText(toggle, dailyQuoteDays, dailyQuoteTime) {
+  if (toggle == 'on')
+    return dailyQuoteDays == 'Every day' ? ('*' + toggle.toUpperCase() + ': Daily Quote :dizzy:*\nYou have Daily Quote turned ' + toggle + '. We\'ll send you an inspiring quote ' + dailyQuoteDays.toLowerCase() + ' at ' + dailyQuoteTime + '.') : ('*' + toggle.toUpperCase() + ': Daily Quote :dizzy:*\nYou have Daily Quote turned ' + toggle + '. We\'ll send you an inspiring quote ' + dailyQuoteDays + ' at ' + dailyQuoteTime + '.');
+  else
+    return '*' + toggle.toUpperCase() + ': Daily Quote :dizzy:*\nTurn on Daily Quote to receive an inspiring quote every day at whatever time you choose.';
+}
+
+/**
+ * Returns the text to show for Hydration Settings
+ * @param {string} toggle             this value tells whether or not the user has opted for hydration reminders
+ * @param {string} hydrationDays      the day range during which the reminders should be sent
+ * @param {string} hydrationInterval  the interval (in minutes) between each reminder
+ * @param {string} hydrationStartTime starting time (in minutes) at which reminders should be sent
+ * @param {string} hydrationEndTime   time (in minutes) after which reminders should not be sent
+ * @returns {string}
+ */
+function hydrationText(toggle, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime) {
+  if (toggle == 'on')
+    return hydrationDays == 'Every day' ? ('*' + toggle.toUpperCase() + ': Hydration Reminders* :droplet:\nYou have Hydration Reminders turned on. We\'ll send you a reminder to drink water ' + hydrationDays.toLowerCase() + ' every ' + hydrationInterval + ' from ' + hydrationStartTime + ' to ' + hydrationEndTime + '.') : ('*' + toggle.toUpperCase() + ': Hydration Reminders* :droplet:\nYou have Hydration Reminders turned on. We\'ll send you a reminder to drink water ' + hydrationDays + ' every ' + hydrationInterval + ' from ' + hydrationStartTime + ' to ' + hydrationEndTime + '.');
+  else
+    return '*' + toggle.toUpperCase() + ': Hydration Reminders* :droplet:\nTurn on Hydration Reminders to receive reminders to drink water as often as you’d like.';
+}
+
+/**
+ * Returns the text to show for Break Settings
+ * @param {string} toggle         this value tells whether or not the user has opted for break reminders
+ * @param {string} breakDays      the day range during which the reminders should be sent
+ * @param {string} breakInterval  the interval (in minutes) between each reminder
+ * @param {string} breakStartTime starting time (in minutes) at which reminders should be sent
+ * @param {string} breakEndTime   time (in minutes) after which reminders should not be sent
+ * @returns {string}
+ */
+function breakText(toggle, breakDays, breakInterval, breakStartTime, breakEndTime) {
+  if (toggle == 'on')
+    return breakDays == 'Every day' ? ('*' + toggle.toUpperCase() + ': Break Reminders* :table_tennis_paddle_and_ball:\nYou have Break Reminders turned on. We\'ll send you a reminder to take a break ' + breakDays.toLowerCase() + ' every ' + breakInterval + ' from ' + breakStartTime + ' to ' + breakEndTime + '.') : ('*' + toggle.toUpperCase() + ': Break Reminders* :table_tennis_paddle_and_ball:\nYou have Break Reminders turned on. We\'ll send you a reminder to take a break ' + breakDays + ' every ' + breakInterval + ' from ' + breakStartTime + ' to ' + breakEndTime + '.');
+  else
+    return '*' + toggle.toUpperCase() + ': Break Reminders* :table_tennis_paddle_and_ball:\nTurn on Break Reminders to receive a message at regular intervals reminding you to take a break.';
+}
+
+/**
+ * Returns the 'Change Schedule' button only if the feature is turned on
+ * @param {string} toggle this value tells whether or not the user has opted for a feature
+ * @returns {object}
+ */
+function changeScheduleButton(toggle) {
+  if (toggle == 'on')
+    return changeScheduleButtonAttachment;
+  else
+    return null;
+}
+
+/**
+ * Returns the appropriate 'Toggle' button depending on current state of the toggle
+ * @param {string} toggle this value tells whether or not the user has opted for a feature
+ * @returns {object}
+ */
+function toggleButton(toggle) {
+  if (toggle == 'on')
+    return {text: 'Turn Off', value: 'off'};
+  else
+    return {text: 'Turn On', value: 'on'};
+}
+
+/**
+ * Determines the button style depending on the state of the toggle
+ * @param {string} toggle this value tells whether or not the user has opted for a feature
+ * @returns {object}
+ */
+function buttonStyle(toggle) {
+  if (toggle == 'on')
+    return 'danger';
+  else
+    return 'primary';
+}
+
+/**
+ * This function returns the Daily Quote attachment to display in user settings
+ * @param {string} toggle         this value tells whether or not the user has opted for daily quotes
+ * @param {string} dailyQuoteDays the day range during which the quote should be sent
+ * @param {string} dailyQuoteTime the time (in minutes) at which quote should be sent
+ * @returns {object}
+ */
 module.exports.dailyQuoteAttachment = function(toggle, dailyQuoteDays, dailyQuoteTime) {
-  let value =           
+  let value =
     {
       color: attachmentColor(toggle),
       callback_id: 'quoteActions',
@@ -169,8 +319,17 @@ module.exports.dailyQuoteAttachment = function(toggle, dailyQuoteDays, dailyQuot
   return value;
 }
 
+/**
+ * This function returns the Hydration attachment to display in user settings
+ * @param {string} toggle             this value tells whether or not the user has opted for hydration reminders
+ * @param {string} hydrationDays      the day range during which the reminders should be sent
+ * @param {string} hydrationInterval  the interval (in minutes) between each reminder
+ * @param {string} hydrationStartTime starting time (in minutes) at which reminders should be sent
+ * @param {string} hydrationEndTime   time (in minutes) after which reminders should not be sent
+ * @returns {object}
+ */
 module.exports.hydrationAttachment = function(toggle, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime) {
-  let value =           
+  let value =
     {
       color: attachmentColor(toggle),
       callback_id: 'hydrationActions',
@@ -189,8 +348,17 @@ module.exports.hydrationAttachment = function(toggle, hydrationDays, hydrationIn
   return value;
 }
 
+/**
+ * This function returns the Break attachment to display in user settings
+ * @param {string} toggle             this value tells whether or not the user has opted for break reminders
+ * @param {string} breakDays      the day range during which the reminders should be sent
+ * @param {string} breakInterval  the interval (in minutes) between each reminder
+ * @param {string} breakStartTime starting time (in minutes) at which reminders should be sent
+ * @param {string} breakEndTime   time (in minutes) after which reminders should not be sent
+ * @returns {object}
+ */
 module.exports.breakAttachment = function(toggle, breakDays, breakInterval, breakStartTime, breakEndTime) {
-  let value =           
+  let value =
     {
       color: attachmentColor(toggle),
       callback_id: 'breakActions',
@@ -206,78 +374,23 @@ module.exports.breakAttachment = function(toggle, breakDays, breakInterval, brea
         }
       ]
     }
-  return value;  
+  return value;
 }
 
-module.exports.randomInvalidCommandMessageGenerator = function() {
-    return invalidCommandMessage[Math.floor(Math.random() * invalidCommandMessage.length)];
-}
-
-module.exports.randomQuoteGenerator = function() {
-    return quotes[Math.floor(Math.random() * quotes.length)];
-}
-
-function attachmentColor(toggle) {
-  if (toggle == 'on') 
-    return onColor;
-  else
-    return defaultColor;
-}
-
-module.exports.settingsText = function(name) {
-  return 'Hi, ' + name + '! You can modify your wellness reminder settings below.';
-}
-
-module.exports.helpText = function(name) {
-  return 'Hi, ' + name + '! I\'m Wellness Bot. I\'m here to help you take care of your health throughout the workday :blush: \n\n There\'s three ways I can help you if you subscribe: \n:dizzy: I can send you inspiring quotes every day at whatever time you choose.\n:droplet: I can send you reminders to drink water at regular intervals.\n:woman-walking: I can also send you reminders to take a break as as often as you\'d like!';
-}
-
-function dailyQuoteText(toggle, dailyQuoteDays, dailyQuoteTime) {
-  if (toggle == 'on') 
-    return dailyQuoteDays == 'Every day' ? ('*' + toggle.toUpperCase() + ': Daily Quote :dizzy:*\nYou have Daily Quote turned ' + toggle + '. We\'ll send you an inspiring quote ' + dailyQuoteDays.toLowerCase() + ' at ' + dailyQuoteTime + '.') : ('*' + toggle.toUpperCase() + ': Daily Quote :dizzy:*\nYou have Daily Quote turned ' + toggle + '. We\'ll send you an inspiring quote ' + dailyQuoteDays + ' at ' + dailyQuoteTime + '.');
-  else
-    return '*' + toggle.toUpperCase() + ': Daily Quote :dizzy:*\nTurn on Daily Quote to receive an inspiring quote every day at whatever time you choose.';
-}
-
-function hydrationText(toggle, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime) {
-  if (toggle == 'on') 
-    return hydrationDays == 'Every day' ? ('*' + toggle.toUpperCase() + ': Hydration Reminders* :droplet:\nYou have Hydration Reminders turned on. We\'ll send you a reminder to drink water ' + hydrationDays.toLowerCase() + ' every ' + hydrationInterval + ' from ' + hydrationStartTime + ' to ' + hydrationEndTime + '.') : ('*' + toggle.toUpperCase() + ': Hydration Reminders* :droplet:\nYou have Hydration Reminders turned on. We\'ll send you a reminder to drink water ' + hydrationDays + ' every ' + hydrationInterval + ' from ' + hydrationStartTime + ' to ' + hydrationEndTime + '.');
-  else
-    return '*' + toggle.toUpperCase() + ': Hydration Reminders* :droplet:\nTurn on Hydration Reminders to receive reminders to drink water as often as you’d like.';
-}
-
-function breakText(toggle, breakDays, breakInterval, breakStartTime, breakEndTime) {
-  if (toggle == 'on') 
-    return breakDays == 'Every day' ? ('*' + toggle.toUpperCase() + ': Break Reminders* :table_tennis_paddle_and_ball:\nYou have Break Reminders turned on. We\'ll send you a reminder to take a break ' + breakDays.toLowerCase() + ' every ' + breakInterval + ' from ' + breakStartTime + ' to ' + breakEndTime + '.') : ('*' + toggle.toUpperCase() + ': Break Reminders* :table_tennis_paddle_and_ball:\nYou have Break Reminders turned on. We\'ll send you a reminder to take a break ' + breakDays + ' every ' + breakInterval + ' from ' + breakStartTime + ' to ' + breakEndTime + '.');
-  else
-    return '*' + toggle.toUpperCase() + ': Break Reminders* :table_tennis_paddle_and_ball:\nTurn on Break Reminders to receive a message at regular intervals reminding you to take a break.';
-}
-
-function changeScheduleButton(toggle) {
-  if (toggle == 'on')
-    return changeScheduleButtonAttachment;
-  else
-    return null;
-}
-
-function toggleButton(toggle) {
-  if (toggle == 'on')
-    return {text: 'Turn Off', value: 'off'};
-  else
-    return {text: 'Turn On', value: 'on'};
-}
-
-function buttonStyle(toggle) {
-  if (toggle == 'on') 
-    return 'danger';
-  else
-    return 'primary';
-}
-
+/**
+ * Pads single digits with a 0 (i.e. 9 becomes 09)
+ * @param {string} d the number to pad
+ * @returns {string}
+ */
 function pad(d) {
    return (d < 10) ? '0' + d.toString() : d.toString();
 }
 
+/**
+ * Converts minutes (as it is stored in the database) to human-readable time (i.e. 960 becomes "4:00 AM")
+ * @param {number} x the number to convert
+ * @returns {string}
+ */
 module.exports.convertMinutesToString = function(x) {
   let hrs = x/60;
   let mins = x%60;
@@ -292,6 +405,11 @@ module.exports.convertMinutesToString = function(x) {
   }
 }
 
+/**
+ * Converts the interval time (in minutes) to an appropriate string (i.e. 90 becomes "1 hour and 30 minutes")
+ * @param {number} x the number to convert
+ * @returns {string}
+ */
 module.exports.convertIntervalToString = function(x) {
   let hrs = x/60,
       mins = x%60;
@@ -302,13 +420,13 @@ module.exports.convertIntervalToString = function(x) {
     else if (Math.floor(hrs) == 1) {
       if (mins == 0)
         return Math.floor(hrs) + ' hour';
-      else 
+      else
         return Math.floor(hrs) + ' hour and ' + pad(mins) + ' minutes';
     }
     else {
       if (mins == 0)
         return Math.floor(hrs) + ' hours';
-      else 
+      else
         return Math.floor(hrs) + ' hours and ' + pad(mins) + ' minutes';
     }
   }
@@ -316,61 +434,71 @@ module.exports.convertIntervalToString = function(x) {
     return pad(mins) + ' minutes';
 }
 
+
+/**
+ * Calculates a list of times at which the reminder needs to be sent based on the start time, end time and interval.
+ * @param {string} startTime starting time (in minutes) at which reminders should be sent
+ * @param {string} endTime   time (in minutes) after which reminders should not be sent
+ * @param {string} interval  the interval (in minutes) between each reminder
+ * @returns {string}
+ */
 module.exports.calculateTimes = function(startTime, endTime, interval) {
   let times = [], oldEndTime = 0, tempInterval = 0;
-  //console.log('startTime: ' + startTime);
-  //console.log('endTime: ' + endTime);
-  //console.log('interval: ' + interval);
-  
+
   startTime = parseInt(startTime);
-  endTime = parseInt(endTime); 
+  endTime = parseInt(endTime);
   interval = parseInt(interval);
-  
-  
-  //accounting for if start time = 420 (7 AM) and end time = 90 (1:30 AM)  
+
+  //accounting for if start time = 420 (7 AM) and end time = 90 (1:30 AM)
   if (endTime < startTime) {
     oldEndTime = endTime; //
     endTime = 1470;
   }
 
+  //examples:
   //start time = 1470, end time = 60, interval = 15 mins, no error
   //start time = 1470, end time = 60, interval = 30 mins, no error
   //start time = 1470, end time = 60, interval = 45 mins, error
   //start time = 1440, end time = 90, interval = 15 mins, no error
   //start time = 1440, end time = 90, interval = 150 mins, error
-  
+
   if (interval <= (endTime - startTime)) {
     //going from startTime till 1470 (12 AM)
     for (let i = startTime; i < endTime; i += interval) {
-      //console.log('pushing i = ' + i);
       times.push(i);
     }
-    
+
     if (endTime == 1470) {
       let partialTimeCounted = 1470 - times[times.length-1];
-      
       if (partialTimeCounted != 0 ) {
-        tempInterval = interval - partialTimeCounted; 
+        tempInterval = interval - partialTimeCounted;
         if (tempInterval <= 60) {
           times.push(tempInterval);
         }
-       }      
+       }
     }
-
   }
 
   for (let i = tempInterval + interval; i < oldEndTime; i += interval) {
       times.push(i);
   }
-  
+
   return times.toString();
 }
 
+
+/**
+ * Returns an error if the given start time, end time and interval would result in no reminders being set
+ * @param {string} startTime starting time (in minutes) at which reminders should be sent
+ * @param {string} endTime   time (in minutes) after which reminders should not be sent
+ * @param {string} interval  the interval (in minutes) between each reminder
+ * @returns {boolean}
+ */
 module.exports.catchErrors = function (startTime, endTime, interval) {
   let errorsFound = false;
-  
+
   if (endTime < startTime) {
-    oldEndTime = endTime; 
+    oldEndTime = endTime;
     endTime = 1470;
     if (interval > (1470 - startTime)) {
       if ((interval - (1470 - startTime)) > (endTime - 30)) {
@@ -383,6 +511,6 @@ module.exports.catchErrors = function (startTime, endTime, interval) {
       errorsFound = true;
     }
   }
-  
+
   return errorsFound;
 }
