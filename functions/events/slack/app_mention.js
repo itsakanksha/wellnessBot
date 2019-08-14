@@ -23,12 +23,12 @@ module.exports = async (event) => {
 
   // Prepare workflow object to store API responses
   let workflow = {};
-  
+
   // Retrieve and store user id from event object
   workflow.user = await users.retrieve({
     user: `${event.event.user}`
   });
-  
+
   // Retrieve and store channel id from event object
   workflow.channel = await conversations.info({
     id: `${event.event.channel}`
@@ -38,7 +38,7 @@ module.exports = async (event) => {
   workflow.response = await messages.create({
     id: `${workflow.channel.id}`,
     text: 'Hi, there! Thanks for mentioning me here but I\'m only meant to be used through slash commands. I\'m a personalizable bot that can help you take care of your health throughout the workday :blush: \n\n There\'s three ways I can help you if you subscribe: \n:dizzy: I can send you inspiring quotes every day at whatever time you choose.\n:droplet: I can send you reminders to drink water at regular intervals.\n:woman-walking: I can also send you reminders to take a break as as often as you\'d like.\n\nType \`/wellness subscribe\` to get started!'
-  });   
+  });
 
   return workflow;
 };

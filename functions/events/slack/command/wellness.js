@@ -20,13 +20,13 @@ let user, dailyQuoteTime, hydrationDays, hydrationInterval, hydrationStartTime, 
 /**
 * An HTTP endpoint that acts as a webhook for Slack command event
 * This function handles the following slash commands:
-* /wellness
-* /wellness settings
-* /wellness subscribe
-* /wellness unsubscribe
-* /wellness help
-* /wellness quote
-* and it also handles invalid commands
+* - /wellness
+* - /wellness settings
+* - /wellness subscribe
+* - /wellness unsubscribe
+* - /wellness help
+* - /wellness quote
+* - and it also handles invalid commands
 *
 * @param {object} event Slack command event body (raw)
 * @returns {object} workflow The result of your workflow steps
