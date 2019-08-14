@@ -28,6 +28,7 @@ let hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime;
 */
 module.exports = async (event, context) => {
 
+  console.log('hydrationActions running!');
   // Prepare workflow object to store API responses
   let workflow = {};
 
@@ -95,6 +96,9 @@ module.exports = async (event, context) => {
        trigger_id: `${event.trigger_id}`
      });
   }
+  // If user is turning break reminders on/off
+  else if (actionTaken == 'toggle') {
+  console.log('inside the toggle action!');
 
   // Retrieve and store user id from event object
   workflow.user = await users.retrieve({
@@ -125,44 +129,42 @@ module.exports = async (event, context) => {
   breakInterval = helper.convertIntervalToString(user.breakInterval),
   breakEndTime = helper.convertMinutesToString(user.breakEnd);
 
-  // If user is turning break reminders on/off
-  if (actionTaken == 'toggle') {
-    // Update the database with the new boolean
-    var updatingUserRecord = await query.update({
-      table: `Wellness Subscribers`,
-      where: {
-        'User ID': `${event.user.id}`
-      },
-      fields: {
-        'Hydration Bool': actionValue
-      }
+  // Update the database with the new boolean
+  var updatingUserRecord = await query.update({
+    table: `Wellness Subscribers`,
+    where: {
+      'User ID': `${event.user.id}`
+    },
+    fields: {
+      'Hydration Bool': actionValue
+    }
+  });
+
+  // Updating the message through HTTP request
+  // Note: The message had to be recreated from scratch because Slack doesn't store the original message anywhere in the case of ephemeral messages
+  let response = await axios.request({
+    url: event.response_url,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({
+      replace_original: "true",
+      text: helper.settingsText(`${workflow.user.real_name}`),
+      attachments: [
+        helper.dailyQuoteAttachment(user.dailyQuote, user.dailyQuoteDays, dailyQuoteTime),
+        helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),  // the attachment that is changing
+        helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
+      	helper.usageTipsSubscribed
+      ]
+      })
     });
 
-    // Updating the message through HTTP request
-    // Note: The message had to be recreated from scratch because Slack doesn't store the original message anywhere in the case of ephemeral messages
-    let response = await axios.request({
-      url: event.response_url,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: JSON.stringify({
-        replace_original: "true",
-        text: helper.settingsText(`${workflow.user.real_name}`),
-        attachments: [
-          helper.dailyQuoteAttachment(user.dailyQuote, user.dailyQuoteDays, dailyQuoteTime),
-          helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),  // the attachment that is changing
-          helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
-        	helper.usageTipsSubscribed
-        ]
-        })
-      });
-
-      // Rescheduling the messages
-      let scheduleUserMessages = await lib[`${context.service.identifier}.scheduleUserMessages`]({
-        userID: `${event.user.id}`
-      });
-    }
+    // Rescheduling the messages
+    let scheduleUserMessages = await lib[`${context.service.identifier}.scheduleUserMessages`]({
+      userID: `${event.user.id}`
+    });
+  }
 
   return workflow;
 };
