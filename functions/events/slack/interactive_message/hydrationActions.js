@@ -101,14 +101,14 @@ module.exports = async (event, context) => {
     user: `${event.user.id}`
   });
 
-  user[dailyQuote] = userRecord.rows[0].fields['Daily Quote Bool'];
-  user[dailyQuoteTime] = userRecord.rows[0].fields['Daily Quote Time'];
-  user[dailyQuoteDays] = userRecord.rows[0].fields['Daily Quote Days'];
-  user[breakBool] = userRecord.rows[0].fields['Break Bool'];
-  user[breakTimes] = userRecord.rows[0].fields['Break Times'];
-  user[breakDays] = userRecord.rows[0].fields['Break Days'];
-  user[breakEnd] = userRecord.rows[0].fields['Break End'];
-  user[breakInterval] = userRecord.rows[0].fields['Break Interval'];
+  user.dailyQuote = userRecord.rows[0].fields['Daily Quote Bool'];
+  user.dailyQuoteTime = userRecord.rows[0].fields['Daily Quote Time'];
+  user.dailyQuoteDays = userRecord.rows[0].fields['Daily Quote Days'];
+  user.break = userRecord.rows[0].fields['Break Bool'];
+  user.breakTimes = userRecord.rows[0].fields['Break Times'];
+  user.breakDays = userRecord.rows[0].fields['Break Days'];
+  user.breakEnd = userRecord.rows[0].fields['Break End'];
+  user.breakInterval = userRecord.rows[0].fields['Break Interval'];
 
   // Converting Daily Quote database values to meaningful strings
   dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
@@ -152,7 +152,7 @@ module.exports = async (event, context) => {
         attachments: [
           helper.dailyQuoteAttachment(user.dailyQuote, user.dailyQuoteDays, dailyQuoteTime),
           helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),  // the attachment that is changing
-          helper.breakAttachment(user.breakBool, breakDays, breakInterval, breakStartTime, breakEndTime),
+          helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
         	helper.usageTipsSubscribed
         ]
         })
