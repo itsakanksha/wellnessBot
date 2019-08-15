@@ -336,7 +336,7 @@ module.exports = async (event, context) => {
             });
             break;
 
-          case: '':
+          case '':
             /* User is not subscribed and typed "/wellness"
                Explain to user what WellnessBot is and give usage tips */
             await messages.ephemeral.create({

@@ -79,15 +79,14 @@ let invalidCommandMessage = [
 let hydrationReminders = [
   "Remember to drink water and stay hydrated!",
   "It's time to drink some water!",
-  "Water's kinda good for you. Make sure you drink some!",
-  "Drink some water and stay hydrated!"
+  "Water's kinda good for you. Make sure you drink some!"
 ];
 
 let breakReminders = [
   "Get up, step away from your desk and take a break.",
-  "Take a walk outside or go chat with a coworker.",
-  "Have you been sitting too long? Stand up and stretch a little.",
-  "Have you been working without a break for a while now? Take a 10 minute break! Stand up, stretch and move around.",
+  "Time for a break! Take a walk outside or go chat with a coworker.",
+  "Have you been sitting for too long? Stand up and stretch a little.",
+  "Take a 10 minute break! Stand up, stretch and move around.",
   "Time for a little break! Here's a quick exercise for your eyes: Look far away at an object for 10-15 seconds, then gaze at something up close for 10-15 seconds. Then look back at the distant object. Do this 10 times."
 ];
 
@@ -435,8 +434,11 @@ module.exports.convertMinutesToString = function(x) {
   if (hrs/10 <= 1.15) {
     return Math.floor(hrs) + ':' + pad(mins) + ' AM';
   }
-  else if (hrs/10 == 1.2) {
+  else if (hrs/10 == 1.2) { //12:00 should be displayed as 12:00 PM
     return Math.floor(hrs) + ':' + pad(mins) + ' PM';
+  }
+  else if (hrs/10 == 2.4) { //24:00 should be displayed as 12:00 AM
+    return (Math.floor(hrs)-12) + ':' + pad(mins) + ' AM';
   }
   else {
     return (Math.floor(hrs)-12) + ':' + pad(mins) + ' PM';
@@ -491,6 +493,11 @@ module.exports.calculateTimes = function(startTime, endTime, interval) {
   if (endTime < startTime) {
     oldEndTime = endTime; //
     endTime = 1470;
+    if (interval > (endTime - startTime)) {
+      if ((interval - (endTime - startTime)) <= (oldEndTime - 30)) {
+        times.push(startTime);
+      } 
+    }
   }
 
   //examples:

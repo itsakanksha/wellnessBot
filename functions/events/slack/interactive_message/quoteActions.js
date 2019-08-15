@@ -136,7 +136,7 @@ module.exports = async (event, context) => {
         attachments: [
            helper.dailyQuoteAttachment(actionValue, user.dailyQuoteDays, dailyQuoteTime), //attachment that is changing
            helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),
-           helper.breakAttachment(actionValue, breakDays, breakInterval, breakStartTime, breakEndTime),
+           helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
         	 helper.usageTipsSubscribed
         ]
         })
