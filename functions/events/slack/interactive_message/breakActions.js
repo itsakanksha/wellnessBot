@@ -94,40 +94,8 @@ module.exports = async (event, context) => {
       trigger_id: `${event.trigger_id}`
     });
   }
-
-  // Retrieve and store user id from event object
-  workflow.user = await users.retrieve({
-    user: `${event.user.id}`
-  });
-
-  user = {
-           dailyQuote: userRecord.rows[0].fields['Daily Quote Bool'],
-           dailyQuoteTime: userRecord.rows[0].fields['Daily Quote Time'],
-           dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
-           hydration: userRecord.rows[0].fields['Hydration Bool'],
-           hydrationTimes: userRecord.rows[0].fields['Hydration Times'],
-           hydrationDays: userRecord.rows[0].fields['Hydration Days'],
-           hydrationEnd: userRecord.rows[0].fields['Hydration End'],
-           hydrationInterval: userRecord.rows[0].fields['Hydration Interval']
-         };
-
-  // Converting Daily Quote database values to meaningful strings
-  dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
-
-  // Converting Hydration database values to meaningful strings
-  hydrationDays = helper.dayRanges[user.hydrationDays],
-  hydrationStartTime = helper.convertMinutesToString(parseInt(user.hydrationTimes.split(",")[0])),
-  hydrationInterval = helper.convertIntervalToString(user.hydrationInterval),
-  hydrationEndTime = helper.convertMinutesToString(user.hydrationEnd);
-
-  // Converting Break database values to meaningful strings
-  breakDays = helper.dayRanges[user.breakDays],
-  breakStartTime = helper.convertMinutesToString(parseInt(user.breakTimes.split(",")[0])),
-  breakInterval = helper.convertIntervalToString(user.breakInterval),
-  breakEndTime = helper.convertMinutesToString(user.breakEnd);
-
   // If user is turning break reminders on/off
-  if (actionTaken == 'toggle') {
+  else if (actionTaken == 'toggle') {
     // Update the database with the new boolean
     var updatingUserRecord = await query.update({
       table: `Wellness Subscribers`,
@@ -138,6 +106,35 @@ module.exports = async (event, context) => {
         'Break Bool': actionValue
       }
     });
+
+    // Retrieve and store user id from event object
+    workflow.user = await users.retrieve({
+      user: `${event.user.id}`
+    });
+
+    user.dailyQuote = userRecord.rows[0].fields['Daily Quote Bool'];
+    user.dailyQuoteTime = userRecord.rows[0].fields['Daily Quote Time'];
+    user.dailyQuoteDays = userRecord.rows[0].fields['Daily Quote Days'];
+    user.hydration = userRecord.rows[0].fields['Hydration Bool'];
+    user.hydrationTimes = userRecord.rows[0].fields['Hydration Times'];
+    user.hydrationDays = userRecord.rows[0].fields['Hydration Days'];
+    user.hydrationEnd = userRecord.rows[0].fields['Hydration End'];
+    user.hydrationInterval = userRecord.rows[0].fields['Hydration Interval'];
+
+    // Converting Daily Quote database values to meaningful strings
+    dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
+
+    // Converting Hydration database values to meaningful strings
+    hydrationDays = helper.dayRanges[user.hydrationDays],
+    hydrationStartTime = helper.convertMinutesToString(parseInt(user.hydrationTimes.split(",")[0])),
+    hydrationInterval = helper.convertIntervalToString(user.hydrationInterval),
+    hydrationEndTime = helper.convertMinutesToString(user.hydrationEnd);
+
+    // Converting Break database values to meaningful strings
+    breakDays = helper.dayRanges[user.breakDays],
+    breakStartTime = helper.convertMinutesToString(parseInt(user.breakTimes.split(",")[0])),
+    breakInterval = helper.convertIntervalToString(user.breakInterval),
+    breakEndTime = helper.convertMinutesToString(user.breakEnd);
 
     // Updating the message through HTTP request
     // Note: The message had to be recreated from scratch because Slack doesn't store the original message anywhere in the case of ephemeral messages

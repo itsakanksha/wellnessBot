@@ -105,6 +105,17 @@ module.exports = async (event, context) => {
     user: `${event.user.id}`
   });
 
+  // Update the database with the new boolean
+  var updatingUserRecord = await query.update({
+    table: `Wellness Subscribers`,
+    where: {
+      'User ID': `${event.user.id}`
+    },
+    fields: {
+      'Hydration Bool': actionValue
+    }
+  });
+
   user.dailyQuote = userRecord.rows[0].fields['Daily Quote Bool'];
   user.dailyQuoteTime = userRecord.rows[0].fields['Daily Quote Time'];
   user.dailyQuoteDays = userRecord.rows[0].fields['Daily Quote Days'];
@@ -129,17 +140,6 @@ module.exports = async (event, context) => {
   breakInterval = helper.convertIntervalToString(user.breakInterval),
   breakEndTime = helper.convertMinutesToString(user.breakEnd);
 
-  // Update the database with the new boolean
-  var updatingUserRecord = await query.update({
-    table: `Wellness Subscribers`,
-    where: {
-      'User ID': `${event.user.id}`
-    },
-    fields: {
-      'Hydration Bool': actionValue
-    }
-  });
-
   // Updating the message through HTTP request
   // Note: The message had to be recreated from scratch because Slack doesn't store the original message anywhere in the case of ephemeral messages
   let response = await axios.request({
@@ -153,11 +153,11 @@ module.exports = async (event, context) => {
       text: helper.settingsText(`${workflow.user.real_name}`),
       attachments: [
         helper.dailyQuoteAttachment(user.dailyQuote, user.dailyQuoteDays, dailyQuoteTime),
-        helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),  // the attachment that is changing
+        helper.hydrationAttachment(actionValue, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),  // the attachment that is changing
         helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
       	helper.usageTipsSubscribed
       ]
-    });
+    })
   });
     console.log('whats going on fam');
     console.log(response.data);

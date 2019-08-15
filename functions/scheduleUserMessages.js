@@ -162,47 +162,53 @@ module.exports = async (userID) => {
 
   // Scheduling Daily Quote Message if the user has turned it on
   if (user.dailyQuote == 'on') {
-    console.log('Scheduling Daily Quote Messages');
-    let epoch_date = calculateEpoch(parseInt(user.dailyQuoteTime), offsetHours, offsetMinutes);
-    if (epoch_date > Date.now()/1000) { // to avoid time_in_past error
-      await messages.schedule({
-        id: im_id,
-        postAt: epoch_date.toString(),
-        text: helper.randomQuoteGenerator()
-      });
+    //if today is within the day range user has selected
+    if (helper.withinDayRange[user.breakDays].includes(utcDay)) {
+      let epoch_date = calculateEpoch(parseInt(user.dailyQuoteTime), offsetHours, offsetMinutes);
+      if (epoch_date > Date.now()/1000) { // to avoid time_in_past error
+        await messages.schedule({
+          id: im_id,
+          postAt: epoch_date.toString(),
+          text: helper.randomStringGenerator('quote')
+        });
+      }
     }
   }
 
   // Scheduling Hydration reminders if the user has turned it on
   if (user.hydration == 'on') {
-    console.log('Scheduling Hydration Reminders');
-    let hydrationTimes = user.hydrationTimes.split(",");
-    await async.mapLimit(hydrationTimes, 10, async (hydrationTime) => {
-      let epoch_date = calculateEpoch(parseInt(hydrationTime), offsetHours, offsetMinutes);
-      if (epoch_date > Date.now()/1000) { // to avoid time_in_past error
-        await messages.schedule({
-          id: im_id,
-          postAt: epoch_date.toString(),
-          text: `:droplet: Time to drink water!`
-        });
-      }
-    });
+    //if today is within the day range user has selected
+    if (helper.withinDayRange[user.hydrationDays].includes(utcDay)) {
+      let hydrationTimes = user.hydrationTimes.split(",");
+      await async.mapLimit(hydrationTimes, 10, async (hydrationTime) => {
+        let epoch_date = calculateEpoch(parseInt(hydrationTime), offsetHours, offsetMinutes);
+        if (epoch_date > Date.now()/1000) { // to avoid time_in_past error
+          await messages.schedule({
+            id: im_id,
+            postAt: epoch_date.toString(),
+            text: helper.randomStringGenerator('hydration_reminder')
+          });
+        }
+      });
+    }
   }
 
   // Scheduling Break reminders if the user has turned it on
   if (user.break == 'on') {
-    console.log('Scheduling Break Reminders');
-    let breakTimes = user.breakTimes.split(",");
-    await async.mapLimit(breakTimes, 10, async (breakTime) => {
-      let epoch_date = calculateEpoch(parseInt(breakTime), offsetHours, offsetMinutes);
-      if (epoch_date > Date.now()/1000) { // to avoid time_in_past error
-        await messages.schedule({
-          id: im_id,
-          postAt: epoch_date.toString(),
-          text: `:woman-walking: Time to take a break!`
-        });
-      }
-    });
+    //if today is within the day range user has selected
+    if (helper.withinDayRange[user.breakDays].includes(utcDay)) {
+      let breakTimes = user.breakTimes.split(",");
+      await async.mapLimit(breakTimes, 10, async (breakTime) => {
+        let epoch_date = calculateEpoch(parseInt(breakTime), offsetHours, offsetMinutes);
+        if (epoch_date > Date.now()/1000) { // to avoid time_in_past error
+          await messages.schedule({
+            id: im_id,
+            postAt: epoch_date.toString(),
+            text: helper.randomStringGenerator('break_reminder')
+          });
+        }
+      });
+    }
   }
 
   // Retrieving all scheduled messages for this user

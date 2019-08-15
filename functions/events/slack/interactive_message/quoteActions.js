@@ -48,6 +48,9 @@ module.exports = async (event, context) => {
                dailyQuoteDays: userRecord.rows[0].fields['Daily Quote Days'],
              };
 
+  console.log(user.dailyQuoteDays);
+  console.log(user.dailyQuoteTime);
+
   // If user is trying to change the schedule of their break reminders
   if (actionTaken == 'schedule') {
     workflow.response = await dialog.open({
@@ -77,43 +80,40 @@ module.exports = async (event, context) => {
        trigger_id: `${event.trigger_id}`
     });
   }
-
-
-  // Retrieve and store user id from event object
-  workflow.user = await users.retrieve({
-    user: `${event.user.id}`
-  });
-
-  user = {
-           break: userRecord.rows[0].fields['Break Bool'],
-           breakTimes: userRecord.rows[0].fields['Break Times'],
-           breakDays: userRecord.rows[0].fields['Break Days'],
-           breakEnd: userRecord.rows[0].fields['Break End'],
-           breakInterval: userRecord.rows[0].fields['Break Interval'],
-           hydration: userRecord.rows[0].fields['Hydration Bool'],
-           hydrationTimes: userRecord.rows[0].fields['Hydration Times'],
-           hydrationDays: userRecord.rows[0].fields['Hydration Days'],
-           hydrationEnd: userRecord.rows[0].fields['Hydration End'],
-           hydrationInterval: userRecord.rows[0].fields['Hydration Interval']
-         };
-
-  // Converting Daily Quote database values to meaningful strings
-  dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
-
-  // Converting Hydration database values to meaningful strings
-  hydrationDays = helper.dayRanges[user.hydrationDays],
-  hydrationStartTime = helper.convertMinutesToString(parseInt(user.hydrationTimes.split(",")[0])),
-  hydrationInterval = helper.convertIntervalToString(user.hydrationInterval),
-  hydrationEndTime = helper.convertMinutesToString(user.hydrationEnd);
-
-  // Converting Break database values to meaningful strings
-  breakDays = helper.dayRanges[user.breakDays],
-  breakStartTime = helper.convertMinutesToString(parseInt(user.breakTimes.split(",")[0])),
-  breakInterval = helper.convertIntervalToString(user.breakInterval),
-  breakEndTime = helper.convertMinutesToString(user.breakEnd);
-
   // If user is turning daily quote messages on/off
-  if (actionTaken == 'toggle') {
+  else if (actionTaken == 'toggle') {
+
+    // Retrieve and store user id from event object
+    workflow.user = await users.retrieve({
+      user: `${event.user.id}`
+    });
+
+    user.break = userRecord.rows[0].fields['Break Bool'];
+    user.breakTimes = userRecord.rows[0].fields['Break Times'];
+    user.breakDays = userRecord.rows[0].fields['Break Days'];
+    user.breakEnd = userRecord.rows[0].fields['Break End'];
+    user.breakInterval = userRecord.rows[0].fields['Break Interval'];
+    user.hydration = userRecord.rows[0].fields['Hydration Bool'];
+    user.hydrationTimes = userRecord.rows[0].fields['Hydration Times'];
+    user.hydrationDays = userRecord.rows[0].fields['Hydration Days'];
+    user.hydrationEnd = userRecord.rows[0].fields['Hydration End'];
+    user.hydrationInterval = userRecord.rows[0].fields['Hydration Interval'];
+
+    // Converting Daily Quote database values to meaningful strings
+    dailyQuoteTime = helper.convertMinutesToString(user.dailyQuoteTime);
+
+    // Converting Hydration database values to meaningful strings
+    hydrationDays = helper.dayRanges[user.hydrationDays],
+    hydrationStartTime = helper.convertMinutesToString(parseInt(user.hydrationTimes.split(",")[0])),
+    hydrationInterval = helper.convertIntervalToString(user.hydrationInterval),
+    hydrationEndTime = helper.convertMinutesToString(user.hydrationEnd);
+
+    // Converting Break database values to meaningful strings
+    breakDays = helper.dayRanges[user.breakDays],
+    breakStartTime = helper.convertMinutesToString(parseInt(user.breakTimes.split(",")[0])),
+    breakInterval = helper.convertIntervalToString(user.breakInterval),
+    breakEndTime = helper.convertMinutesToString(user.breakEnd);
+
     // Update the database with the new boolean
     var updatingUserRecord = await query.update({
       table: `Wellness Subscribers`,
@@ -136,7 +136,7 @@ module.exports = async (event, context) => {
         attachments: [
            helper.dailyQuoteAttachment(actionValue, user.dailyQuoteDays, dailyQuoteTime), //attachment that is changing
            helper.hydrationAttachment(user.hydration, hydrationDays, hydrationInterval, hydrationStartTime, hydrationEndTime),
-           helper.breakAttachment(user.break, breakDays, breakInterval, breakStartTime, breakEndTime),
+           helper.breakAttachment(actionValue, breakDays, breakInterval, breakStartTime, breakEndTime),
         	 helper.usageTipsSubscribed
         ]
         })

@@ -76,6 +76,20 @@ let invalidCommandMessage = [
   "Uh oh, that command did not work. :see_no_evil: Try the following commands instead: \n"
 ];
 
+let hydrationReminders = [
+  "Remember to drink water and stay hydrated!",
+  "It's time to drink some water!",
+  "Water's kinda good for you. Make sure you drink some!",
+  "Drink some water and stay hydrated!"
+];
+
+let breakReminders = [
+  "Get up, step away from your desk and take a break.",
+  "Take a walk outside or go chat with a coworker.",
+  "Have you been sitting too long? Stand up and stretch a little.",
+  "Have you been working without a break for a while now? Take a 10 minute break! Stand up, stretch and move around.",
+  "Time for a little break! Here's a quick exercise for your eyes: Look far away at an object for 10-15 seconds, then gaze at something up close for 10-15 seconds. Then look back at the distant object. Do this 10 times."
+];
 
 /** Export Variable Declarations **/
 
@@ -88,6 +102,20 @@ module.exports.usageTipsSubscribed =  { text: `*Usage Tips*\n\n:gear: \`/wellnes
 module.exports.inputError = { color: '#D33222', text: "Uh oh, we found an error in your submission and your changes didn't go through. Make sure your interval is not greater than the start and end time otherwise you won't receive any reminders."};
 
 module.exports.dayRanges = dayRanges;
+
+module.exports.withinDayRange = {
+  0: [0, 1, 2, 3, 4, 5, 6],
+  1: [1, 2, 3, 4, 5],
+  2: [0, 1, 2, 3, 4],
+  3: [1, 2, 3, 4, 5, 6]
+};
+
+module.exports.dayRangesAttachment = [
+    { "label": "Every day", "value": "0" },
+    { "label": "Monday through Friday", "value": "1" },
+    { "label": "Sunday through Thursday", "value": "2" },
+    { "label": "Monday through Saturday", "value": "3" }
+];
 
 module.exports.timeRangesAttachment = [
     { "label": "7:00 AM", "value": "420" },
@@ -140,13 +168,6 @@ module.exports.timeRangesAttachment = [
     { "label": "6:30 AM", "value": "390" }
 ];
 
-module.exports.dayRangesAttachment = [
-    { "label": "Every day", "value": "0" },
-    { "label": "Monday through Friday", "value": "1" },
-    { "label": "Sunday through Thursday", "value": "2" },
-    { "label": "Monday through Saturday", "value": "3" }
-];
-
 module.exports.timeIntervalsAttachment = [
     { "label": "15 minutes", "value": "15" },
     { "label": "30 minutes", "value": "30" },
@@ -197,6 +218,23 @@ module.exports.randomInvalidCommandMessageGenerator = function() {
  */
 module.exports.randomQuoteGenerator = function() {
     return quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+/**
+ * Returns a random string from different arrays of strings. This is used instead of a single standard message to add
+ * less predictably and more human-like feel to the bot.
+ * @param toGenerate what type of  random string to return
+ * @returns {string}
+ */
+module.exports.randomStringGenerator = function(toGenerate) {
+    if (toGenerate == 'quote')
+      return ':dizzy: ' + quotes[Math.floor(Math.random() * quotes.length)];
+    else if (toGenerate == 'invalid_command')
+      return invalidCommandMessage[Math.floor(Math.random() * invalidCommandMessage.length)];
+    else if (toGenerate == 'hydration_reminder')
+      return ':droplet: '+ hydrationReminders[Math.floor(Math.random() * hydrationReminders.length)];
+    else if (toGenerate == 'break_reminder')
+      return ':woman-walking: ' + breakReminders[Math.floor(Math.random() * breakReminders.length)];
 }
 
 /**
@@ -495,6 +533,11 @@ module.exports.calculateTimes = function(startTime, endTime, interval) {
  * @returns {boolean}
  */
 module.exports.catchErrors = function (startTime, endTime, interval) {
+
+  startTime = parseInt(startTime);
+  endTime = parseInt(endTime);
+  interval = parseInt(interval);
+
   let errorsFound = false;
 
   if (endTime < startTime) {
@@ -503,12 +546,14 @@ module.exports.catchErrors = function (startTime, endTime, interval) {
     if (interval > (1470 - startTime)) {
       if ((interval - (1470 - startTime)) > (endTime - 30)) {
         errorsFound = true;
+        console.log('error1');
       } 
     }
   }
   else {
     if (interval > (endTime - startTime)) {
       errorsFound = true;
+      console.log('error2');
     }
   }
 
