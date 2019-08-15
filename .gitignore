@@ -1,0 +1,7 @@
+## Ignore Mac OS Stuff
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Ignore ENV variables
+env.json
